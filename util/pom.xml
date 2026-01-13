@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.store.app</groupId>
-	<artifactId>api</artifactId>
+	<artifactId>util</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>api</name>
+	<name>util</name>
 	<description>Library for ecommerce store</description>
 	<url />
 	<licenses>
@@ -42,6 +42,5 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
 
 </project>
