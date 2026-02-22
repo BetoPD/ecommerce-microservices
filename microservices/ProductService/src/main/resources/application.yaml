@@ -1,0 +1,12 @@
+server.port: 8081
+spring.application.name: product
+
+spring.jpa.hibernate.ddl-auto: update
+
+spring:
+  datasource:
+    url: jdbc:postgresql://productsDB:5432/productsdb
+    username: postgres
+    password: postgres
+
+spring.datasource.hikari.initializationFailTimeout: 60000
