@@ -14,6 +14,7 @@
         <module>util</module>
         <module>microservices/ProductService</module>
         <module>microservices/ReviewService</module>
+        <module>spring-cloud/ConfigServer</module>
     </modules>
 
 </project>
