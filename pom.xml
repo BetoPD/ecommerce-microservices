@@ -13,6 +13,7 @@
         <module>api</module>
         <module>util</module>
         <module>microservices/ProductService</module>
+        <module>microservices/ReviewService</module>
     </modules>
 
 </project>

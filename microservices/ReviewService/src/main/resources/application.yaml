@@ -1,0 +1,12 @@
+server.port: 8082
+spring.application.name: review
+
+spring.jpa.hibernate.ddl-auto: update
+
+spring:
+  datasource:
+    url: jdbc:postgresql://reviewsDB:5432/reviewsDB
+    username: postgres
+    password: postgres
+
+spring.datasource.hikari.initializationFailTimeout: 60000

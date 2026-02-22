@@ -83,6 +83,7 @@ public class ProductService implements IProductService {
             ProductEntity productEntity = productRepository.findByProductId(productId).orElseThrow(() -> new NotFoundException("Invalid Product Id: " + productId));
 
             Product updateProduct = new Product();
+            updateProduct.setProductId(productEntity.getProductId());
             updateProduct.setName(product.getName());
             updateProduct.setDescription(product.getDescription());
             updateProduct.setPrice(product.getPrice());
