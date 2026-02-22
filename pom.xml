@@ -15,6 +15,7 @@
         <module>microservices/ProductService</module>
         <module>microservices/ReviewService</module>
         <module>spring-cloud/ConfigServer</module>
+        <module>spring-cloud/EurekaServer</module>
     </modules>
 
 </project>

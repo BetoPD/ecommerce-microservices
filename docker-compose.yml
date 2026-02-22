@@ -10,7 +10,7 @@ services:
       productsDB:
         condition: service_healthy
     ports:
-      - "8081:8081"
+      - '8081:8081'
     networks:
       - ecommerce-net
 
@@ -25,7 +25,17 @@ services:
       reviewsDB:
         condition: service_healthy
     ports:
-      - "8082:8082"
+      - '8082:8082'
+    networks:
+      - ecommerce-net
+
+  eureka:
+    build: spring-cloud/EurekaServer
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_SERVER_USR=${CONFIG_SERVER_USR}
+      - CONFIG_SERVER_PWD=${CONFIG_SERVER_PWD}
+    mem_limit: 512m
     networks:
       - ecommerce-net
 
@@ -49,9 +59,9 @@ services:
       POSTGRES_PASSWORD: 'postgres'
       POSTGRES_DB: 'productsdb'
     ports:
-      - "5432:5432"
+      - '5432:5432'
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d productsdb"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d productsdb']
       interval: 5s
       timeout: 5s
       retries: 5
@@ -65,9 +75,9 @@ services:
       POSTGRES_PASSWORD: 'postgres'
       POSTGRES_DB: 'reviewsDB'
     ports:
-      - "5433:5432"
+      - '5433:5432'
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d reviewsDB" ]
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d reviewsDB']
       interval: 5s
       timeout: 5s
       retries: 5
