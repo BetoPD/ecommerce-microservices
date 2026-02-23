@@ -1,0 +1,45 @@
+server:
+  port: 8443
+  ssl:
+    bundle: gateway
+
+spring:
+  ssl:
+    bundle:
+      jks:
+        gateway:
+          key:
+            alias: gateway
+          keystore:
+            type: PKCS12
+            location: ${SERVER_SSL_BUNDLE_JKS_GATEWAY_KEYSTORE_LOCATION:classpath:keystore/edge.p12}
+            password: ${SERVER_SSL_BUNDLE_JKS_GATEWAY_KEYSTORE_PASSWORD:testtest}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://${app.auth-server}:9999/oauth2/jwks
+  cloud:
+    gateway:
+      server:
+        webflux:
+          trusted-proxies: '.*'
+          routes:
+            - id: product-service
+              uri: lb://product
+              predicates:
+                - Path=/api/v1/products/**
+            - id: review-service
+              uri: lb://review
+              predicates:
+                - Path=/api/v1/reviews/**
+            - id: auth-server
+              uri: lb://auth-server
+              predicates:
+                - Path=/oauth2/**,/.well-known/**,/register,/login,/login/**,/error,/error/**,/default-ui.css
+
+logging:
+  level:
+    root: INFO
+    com.store.app: DEBUG
+    org.springframework.cloud.gateway: DEBUG

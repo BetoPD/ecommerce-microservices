@@ -1,0 +1,32 @@
+server:
+  port: 9999
+  forward-headers-strategy: framework
+
+spring:
+  session:
+    jdbc:
+      initialize-schema: always
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:5434/customersDB
+    username: postgres
+    password: postgres
+    hikari:
+      initializationFailTimeout: 60000
+
+logging:
+  level:
+    root: INFO
+    com.store.app: DEBUG
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  datasource:
+    url: jdbc:postgresql://customersDB:5432/customersDB
+    username: postgres
+    password: postgres

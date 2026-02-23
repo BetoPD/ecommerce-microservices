@@ -1,15 +1,53 @@
-server.port: 8081
-spring.application.name: product
-
-spring.jpa.hibernate.ddl-auto: update
+server:
+  port: 8081
 
 spring:
+  application:
+    name: product
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:5432/productsdb
+    username: postgres
+    password: postgres
+    hikari:
+      initializationFailTimeout: 60000
+  cloud:
+    function:
+      definition: messageProcessor
+    stream:
+      default:
+        contentType: application/json
+      bindings:
+        messageProcessor-in-0:
+          destination: products
+          group: productsGroup
+          consumer:
+            maxAttempts: 3
+            backOffInitialInterval: 500
+            backOffMaxInterval: 1000
+            backOffMultiplier: 2.0
+      rabbit:
+        bindings:
+          messageProcessor-in-0:
+            consumer:
+              autoBindDlq: true
+              republishToDlq: true
+
+logging:
+  level:
+    root: INFO
+    com.store.app: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
   datasource:
     url: jdbc:postgresql://productsDB:5432/productsdb
     username: postgres
     password: postgres
-
-spring.datasource.hikari.initializationFailTimeout: 60000
-
-management.endpoint.health.show-details: 'ALWAYS'
-management.endpoints.web.exposure.include: '*'

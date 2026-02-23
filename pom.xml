@@ -16,6 +16,8 @@
         <module>microservices/ReviewService</module>
         <module>spring-cloud/ConfigServer</module>
         <module>spring-cloud/EurekaServer</module>
+        <module>spring-cloud/Gateway</module>
+        <module>spring-cloud/AuthServer</module>
     </modules>
 
 </project>

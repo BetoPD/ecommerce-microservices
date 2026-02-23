@@ -1,4 +1,4 @@
-spring.application.name: eureka-server
+spring.application.name: gateway
 
 spring.cloud.config:
   failFast: true

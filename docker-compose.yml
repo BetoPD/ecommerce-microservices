@@ -9,6 +9,8 @@ services:
     depends_on:
       productsDB:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     ports:
       - '8081:8081'
     networks:
@@ -23,6 +25,8 @@ services:
       - CONFIG_SERVER_PWD=${CONFIG_SERVER_PWD}
     depends_on:
       reviewsDB:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
     ports:
       - '8082:8082'
@@ -81,6 +85,73 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - ecommerce-net
+
+  customersDB:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'customersDB'
+    ports:
+      - '5434:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d customersDB']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ecommerce-net
+
+  rabbitmq:
+    image: rabbitmq:4.0.7-management
+    mem_limit: 512m
+    ports:
+      - 5672:5672
+      - 15672:15672
+    healthcheck:
+      test: ['CMD', 'rabbitmqctl', 'status']
+      interval: 5s
+      timeout: 2s
+      retries: 60
+    networks:
+      - ecommerce-net
+
+  auth-server:
+    build: spring-cloud/AuthServer
+    mem_limit: 512m
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_SERVER_USR=${CONFIG_SERVER_USR}
+      - CONFIG_SERVER_PWD=${CONFIG_SERVER_PWD}
+    depends_on:
+      customersDB:
+        condition: service_healthy
+    healthcheck:
+      test:
+        ['CMD', 'wget', '-O -', '-q', 'http://localhost:9999/actuator/health']
+      interval: 5s
+      timeout: 2s
+      retries: 60
+    networks:
+      - ecommerce-net
+  gateway:
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_SERVER_USR=${CONFIG_SERVER_USR}
+      - CONFIG_SERVER_PWD=${CONFIG_SERVER_PWD}
+      - SERVER_SSL_BUNDLE_JKS_GATEWAY_KEYSTORE_LOCATION=file:/keystore/edge-test.p12
+      - SERVER_SSL_BUNDLE_JKS_GATEWAY_KEYSTORE_PASSWORD=testtest
+    volumes:
+      - $PWD/keystore:/keystore
+    build: spring-cloud/Gateway
+    mem_limit: 512m
+    ports:
+      - '8443:8443'
+    depends_on:
+      auth-server:
+        condition: service_healthy
     networks:
       - ecommerce-net
 
