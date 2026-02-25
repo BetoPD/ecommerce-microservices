@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.store.app.api.auth.RegisterCustomerDTO;
+import com.store.app.api.exceptions.InvalidInputException;
 import com.store.AuthServer.model.Authority;
 import com.store.AuthServer.model.Customer;
 import com.store.AuthServer.model.CustomerEntity;
@@ -35,7 +36,7 @@ public class AuthService implements UserDetailsService {
     @Transactional
     public CustomerEntity registerCustomer(RegisterCustomerDTO dto) {
         if (customerRepository.findByEmail(dto.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Email already registered: " + dto.getEmail());
+            throw new InvalidInputException("Email already registered: " + dto.getEmail());
         }
 
         CustomerEntity customer = new CustomerEntity();
