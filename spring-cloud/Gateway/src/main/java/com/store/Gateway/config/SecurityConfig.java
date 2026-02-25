@@ -20,7 +20,8 @@ public class SecurityConfig {
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers("/actuator/**").permitAll()
                         .pathMatchers("/oauth2/**", "/.well-known/**", "/login/**", "/login",
-                                "/register", "/error/**", "/error", "/default-ui.css").permitAll()
+                                "/register", "/error/**", "/error", "/default-ui.css", "/eureka/**")
+                        .permitAll()
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(Customizer.withDefaults()));
